@@ -113,7 +113,7 @@ header{flex:none;position:relative;z-index:6;background:linear-gradient(90deg,rg
 footer{color:var(--dim);font-size:13px;text-align:center;padding:14px 12px 24px}
 @media(max-width:760px){.hud{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:900px){.tag86{display:none}.brand small{display:none}}
-@media(max-width:600px){header{gap:6px;padding:5px 8px}.brand b{display:none}.brand img{width:32px;height:auto}.gauge .num{font-size:24px}.gauge span{font-size:10px;white-space:nowrap}.btn{min-height:36px;padding:0 9px;font-size:13px}.btn.ib{width:36px}.hud{padding-top:5px}.orders{gap:4px}.rail{gap:3px}
+@media(max-width:600px){.chip [id^=l-]{display:none}.chip{padding:1px 8px 1px 4px}.rail{flex-wrap:nowrap;overflow-x:auto}.gauge span{font-size:11px!important}header{gap:6px;padding:5px 8px}.brand b{display:none}.brand img{width:32px;height:auto}.gauge .num{font-size:24px}.gauge span{font-size:10px;white-space:nowrap}.btn{min-height:36px;padding:0 9px;font-size:13px}.btn.ib{width:36px}.hud{padding-top:5px}.orders{gap:4px}.rail{gap:3px}
  .ord{min-height:46px;padding:4px 7px}.ord b{font-size:12px}.ord b svg{display:none}.ord small{font-size:11px}.ord .en{display:none}
  .chip{font-size:12px;padding:1px 8px 1px 3px}.chip svg{width:18px;height:18px}.chip .num{font-size:17px}}
 .van{position:absolute;bottom:6px;left:0;width:220px;animation:drive 3.6s ease-in-out forwards;pointer-events:none}
@@ -121,6 +121,11 @@ footer{color:var(--dim);font-size:13px;text-align:center;padding:14px 12px 24px}
 .van .whl{transform-box:fill-box;transform-origin:center;animation:sp .6s linear infinite}
 @keyframes drive{0%{transform:translateX(-240px)}30%,52%{transform:translateX(var(--park))}100%{transform:translateX(var(--end))}}
 .bl.off{display:none}
+.floor.pt .m>svg.body{width:140px;height:112px}
+.floor.pt .tag{font-size:26px;padding:1px 12px;line-height:1.3}.floor.pt .tag .pts{font-size:24px}
+.floor.pt .need span{font-size:21px;line-height:28px;padding:0 8px 0 3px}.floor.pt .need span svg{width:24px;height:24px}
+.floor.pt .bub{font-size:22px;top:-22px;padding:2px 12px}.floor.pt .bar{height:14px;width:128px}
+.floor.pt .zl{display:none}.floor.pt .van{transform-origin:left bottom}
 .road{position:absolute;left:0;height:100px;background:#3d4247;border-top:6px solid #f2c230;overflow:visible}
 .road::before{content:"";position:absolute;left:0;right:0;top:44px;height:5px;background:repeating-linear-gradient(90deg,#e9e6dd 0 40px,transparent 40px 80px);opacity:.7}
 .road .rl{position:absolute;right:20px;top:10px;color:#f2c230;font-weight:900;font-size:16px;white-space:nowrap}
@@ -174,22 +179,22 @@ footer{color:var(--dim);font-size:13px;text-align:center;padding:14px 12px 24px}
 const R = {prof:['鋁型材','Profile'],cut:['切割玻璃','Cut glass'],temp:['鋼化玻璃','Tempered'],lam:['夾膠玻璃','Laminated'],igu:['中空玻璃','Double glazed'],hinge:['窗鉸','Hinge'],mesh:['紗網','Mesh']};
 // L = landscape [left, top], P = portrait [left, top] (floor px)
 const S = [
- {id:'extrude',z:'raw',zh:'鋁型材擠壓',en:'Extrusion',ic:'prof',kind:'extrude',col:'#9cc3e6',inp:{},out:{prof:2},t:4,w:5,L:[70,30],P:[5,40]},
- {id:'cutter',z:'raw',zh:'玻璃切割',en:'Glass cutting',ic:'cut',kind:'cutter',col:'#9fdcd3',inp:{},out:{cut:2},t:3,w:5,L:[70,225],P:[160,40]},
- {id:'press',z:'raw',zh:'窗鉸沖壓',en:'Hinge press',ic:'hinge',kind:'press',col:'#cdb8ea',inp:{},out:{hinge:2},t:3.5,w:5,L:[70,420],P:[315,40]},
- {id:'loom',z:'raw',zh:'紗網機',en:'Mesh weaving',ic:'mesh',kind:'loom',col:'#f5cb92',inp:{},out:{mesh:1},t:3,w:5,L:[70,615],P:[470,40]},
- {id:'temper',z:'glass',zh:'鋼化爐',en:'Tempering',ic:'temp',kind:'temper',col:'#f5a184',inp:{cut:1},out:{temp:1},t:5,w:3,L:[330,120],P:[45,290]},
- {id:'laminate',z:'glass',zh:'夾膠機',en:'Laminating',ic:'lam',kind:'laminate',col:'#a9dba4',inp:{cut:2},out:{lam:1},t:6,w:4,L:[330,500],P:[430,290]},
- {id:'igu',z:'glass',zh:'中空玻璃線',en:'Insulated glass',ic:'igu',kind:'igu',col:'#96d3ea',inp:{temp:2},out:{igu:1},t:6,w:4,L:[560,300],P:[237,290]},
- {id:'casement',z:'asm',zh:'平開窗',en:'Casement window',ic:'casement',kind:'bench',col:'#b9e2a9',inp:{prof:1,igu:1,hinge:1},t:6,w:4,pts:70,L:[820,30],P:[45,555]},
- {id:'sliding',z:'asm',zh:'趟門',en:'Sliding door',ic:'sliding',kind:'bench',col:'#f2d58a',inp:{prof:2,temp:1},t:6,w:4,pts:50,L:[1050,175],P:[237,555]},
- {id:'folding',z:'asm',zh:'摺疊門',en:'Folding door',ic:'folding',kind:'bench',col:'#f3b5c4',inp:{prof:2,lam:1,hinge:2},t:7,w:4,pts:80,L:[820,320],P:[430,555]},
- {id:'shower',z:'asm',zh:'浴屏',en:'Shower screen',ic:'shower',kind:'bench',col:'#a8d8f0',inp:{temp:1,hinge:1},t:4,w:3,pts:35,L:[1050,465],P:[140,790]},
- {id:'screen',z:'asm',zh:'防蚊紗窗',en:'Mosquito screen',ic:'screen',kind:'bench',col:'#d4e6b5',inp:{prof:1,mesh:1},t:4,w:4,pts:25,L:[820,610],P:[335,790]}
+ {id:'extrude',z:'raw',zh:'鋁型材擠壓',en:'Extrusion',ic:'prof',kind:'extrude',col:'#9cc3e6',inp:{},out:{prof:2},t:4,w:5,L:[70,30],P:[5,22]},
+ {id:'cutter',z:'raw',zh:'玻璃切割',en:'Glass cutting',ic:'cut',kind:'cutter',col:'#9fdcd3',inp:{},out:{cut:2},t:3,w:5,L:[70,225],P:[160,22]},
+ {id:'press',z:'raw',zh:'窗鉸沖壓',en:'Hinge press',ic:'hinge',kind:'press',col:'#cdb8ea',inp:{},out:{hinge:2},t:3.5,w:5,L:[70,420],P:[315,22]},
+ {id:'loom',z:'raw',zh:'紗網機',en:'Mesh weaving',ic:'mesh',kind:'loom',col:'#f5cb92',inp:{},out:{mesh:1},t:3,w:5,L:[70,615],P:[470,22]},
+ {id:'temper',z:'glass',zh:'鋼化爐',en:'Tempering',ic:'temp',kind:'temper',col:'#f5a184',inp:{cut:1},out:{temp:1},t:5,w:3,L:[330,120],P:[45,250]},
+ {id:'laminate',z:'glass',zh:'夾膠機',en:'Laminating',ic:'lam',kind:'laminate',col:'#a9dba4',inp:{cut:2},out:{lam:1},t:6,w:4,L:[330,500],P:[430,250]},
+ {id:'igu',z:'glass',zh:'中空玻璃線',en:'Insulated glass',ic:'igu',kind:'igu',col:'#96d3ea',inp:{temp:2},out:{igu:1},t:6,w:4,L:[560,300],P:[237,250]},
+ {id:'casement',z:'asm',zh:'平開窗',en:'Casement window',ic:'casement',kind:'bench',col:'#b9e2a9',inp:{prof:1,igu:1,hinge:1},t:6,w:4,pts:70,L:[820,30],P:[45,478]},
+ {id:'sliding',z:'asm',zh:'趟門',en:'Sliding door',ic:'sliding',kind:'bench',col:'#f2d58a',inp:{prof:2,temp:1},t:6,w:4,pts:50,L:[1050,175],P:[237,478]},
+ {id:'folding',z:'asm',zh:'摺疊門',en:'Folding door',ic:'folding',kind:'bench',col:'#f3b5c4',inp:{prof:2,lam:1,hinge:2},t:7,w:4,pts:80,L:[820,320],P:[430,478]},
+ {id:'shower',z:'asm',zh:'浴屏',en:'Shower screen',ic:'shower',kind:'bench',col:'#a8d8f0',inp:{temp:1,hinge:1},t:4,w:3,pts:35,L:[1050,465],P:[140,700]},
+ {id:'screen',z:'asm',zh:'防蚊紗窗',en:'Mosquito screen',ic:'screen',kind:'bench',col:'#d4e6b5',inp:{prof:1,mesh:1},t:4,w:4,pts:25,L:[820,610],P:[335,700]}
 ];
 const ROAD = 100;
-const FL = {L:{w:1280,h:860,zones:[[20,20,260,820],[300,20,450,820],[770,20,490,820]]},
-            P:{w:640,h:1060,zones:[[10,10,620,250],[10,272,620,250],[10,534,620,516]]}};
+const FL = {L:{w:1280,h:860,road:100,zones:[[20,20,260,820],[300,20,450,820],[770,20,490,820]]},
+            P:{w:640,h:935,road:80,zones:[[10,8,620,224],[10,238,620,224],[10,468,620,458]]}};
 const BELTS = [['cutter','temper'],['cutter','laminate'],['temper','igu'],['igu','casement'],['laminate','folding'],['temper','shower']];
 const PROD = S.filter(s => s.pts);
 const TX = {
@@ -216,7 +221,9 @@ const TX = {
 };
 let LANG = 'zh'; try { LANG = localStorage.getItem('lr-factory-lang') || 'zh'; } catch (e) {}
 const t = k => TX[LANG][k];
+const SHORT = {cutter:'Cutting', press:'Hinges', loom:'Mesh', igu:'Insulating', casement:'Casement', sliding:'Sliding', folding:'Folding', shower:'Shower', screen:'Screen'};
 const nm = s => LANG === 'zh' ? s.zh : s.en;
+const nmS = s => LANG === 'zh' ? s.zh : (mode === 'P' && SHORT[s.id]) || s.en;
 const rn = k => R[k][LANG === 'zh' ? 0 : 1];
 function applyLang() {
   document.documentElement.lang = LANG === 'zh' ? 'zh-HK' : 'en';
@@ -287,19 +294,19 @@ function buildFloor() {
       return `<g class="bl" data-a="${a}" data-b="${b}"><path class="belt" d="${d}"/><path class="beltm" d="${d}"/></g>`; }).join('');
     const zones = F.zones.map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="26" fill="rgba(255,255,255,.35)" stroke="#f2c230" stroke-width="6" stroke-dasharray="22 14"/>`).join('');
     const ZL = F.zones.map(([x, y, w, h], i) => `<div class="zl" style="left:${x + 30}px;top:${y + h - 15}px">${t('zones')[i]}</div>`).join('');
-    const mark = mode === 'L' ? [560, 540, 190] : [470, 830, 140];
-    const boxes = (mode === 'L' ? [[610, 40], [1110, 690], [1170, 640]] : [[28, 820], [40, 950], [560, 965]]).map(([x, y], i) => `<g transform="translate(${x} ${y})"><ellipse cx="38" cy="66" rx="40" ry="7" fill="rgba(60,45,20,.18)"/><rect x="0" y="14" width="76" height="50" rx="4" fill="#d6a868" stroke="#8a6232" stroke-width="2.5"/><path d="M0 14l10-12h56l10 12z" fill="#e6be82" stroke="#8a6232" stroke-width="2.5" stroke-linejoin="round"/><image href="logo.png" x="24" y="19" width="28" height="24"/><text x="38" y="56" text-anchor="middle" font-size="10" font-weight="900" fill="#1f6b3f">升威 LE-RELAX</text></g>`).join('');
+    const mark = mode === 'L' ? [560, 540, 190] : [500, 715, 110];
+    const boxes = (mode === 'L' ? [[610, 40], [1110, 690], [1170, 640]] : [[30, 728], [44, 812]]).map(([x, y], i) => `<g transform="translate(${x} ${y})"><ellipse cx="38" cy="66" rx="40" ry="7" fill="rgba(60,45,20,.18)"/><rect x="0" y="14" width="76" height="50" rx="4" fill="#d6a868" stroke="#8a6232" stroke-width="2.5"/><path d="M0 14l10-12h56l10 12z" fill="#e6be82" stroke="#8a6232" stroke-width="2.5" stroke-linejoin="round"/><image href="logo.png" x="24" y="19" width="28" height="24"/><text x="38" y="56" text-anchor="middle" font-size="10" font-weight="900" fill="#1f6b3f">升威 LE-RELAX</text></g>`).join('');
     const banners = F.zones.filter(z => z[2] > 300).map(([x, y, w, h]) => `<g transform="translate(${x + w - 160} ${y + h - 13})"><rect width="128" height="26" rx="6" fill="#2ebd6b"/><image href="logo.png" x="6" y="4" width="21" height="18"/><text x="32" y="18" font-size="13" font-weight="900" fill="#08140d">升威 LE-RELAX</text></g>`).join('');
-    $('floor').style.width = F.w + 'px'; $('floor').style.height = F.h + ROAD + 'px';
-    $('floor').innerHTML = `<svg class="deco" viewBox="0 0 ${F.w} ${F.h}">${zones}<image href="logo.png" x="${mark[0]}" y="${mark[1]}" width="${mark[2]}" height="${mark[2] * .86}" opacity=".16"/><text x="${mark[0] + mark[2] / 2}" y="${mark[1] + mark[2] * .86 + 34}" text-anchor="middle" font-size="${mark[2] / 6.5}" font-weight="900" fill="#2a6b45" opacity=".22">升威 LE-RELAX</text>${belts}${boxes}${banners}</svg>${ZL}<div class="road" id="road" style="top:${F.h}px;width:${F.w}px"><span class="rl">${t('dispatch')}</span></div>` + S.map(s => `<button class="m idle" id="m-${s.id}" data-id="${s.id}" style="left:${pos(s)[0]}px;top:${pos(s)[1]}px" aria-label="${nm(s)}">
+    $('floor').style.width = F.w + 'px'; $('floor').style.height = F.h + F.road + 'px'; $('floor').classList.toggle('pt', mode === 'P');
+    $('floor').innerHTML = `<svg class="deco" viewBox="0 0 ${F.w} ${F.h}">${zones}<image href="logo.png" x="${mark[0]}" y="${mark[1]}" width="${mark[2]}" height="${mark[2] * .86}" opacity=".16"/><text x="${mark[0] + mark[2] / 2}" y="${mark[1] + mark[2] * .86 + 34}" text-anchor="middle" font-size="${mark[2] / 6.5}" font-weight="900" fill="#2a6b45" opacity=".22">升威 LE-RELAX</text>${belts}${boxes}${banners}</svg>${ZL}<div class="road" id="road" style="top:${F.h}px;width:${F.w}px;height:${F.road}px"><span class="rl">${t('dispatch')}</span></div>` + S.map(s => `<button class="m idle" id="m-${s.id}" data-id="${s.id}" style="left:${pos(s)[0]}px;top:${pos(s)[1]}px" aria-label="${nm(s)}">
       <span class="bub"></span>${machine(s)}
-      <span class="tag">${nm(s)}${s.pts ? `<span class="pts">+${s.pts}</span>` : ''}</span>
+      <span class="tag">${nmS(s)}${s.pts ? `<span class="pts">+${s.pts}</span>` : ''}</span>
       <span class="need">${Object.entries(s.inp).map(([k, v]) => `<span data-k="${k}">${ic(k)}${v}</span>`).join('')}</span>
       <span class="bar"><i></i></span></button>`).join('');
     for (const s of S) { const el = $('m-' + s.id); E[s.id] = {el, bar: el.querySelector('.bar i'), bub: el.querySelector('.bub'), need: [...el.querySelectorAll('.need span')]}; }
   }
   beltVis();
-  const F = FL[mode], k = Math.min(SW / F.w, SH / (F.h + ROAD));
+  const F = FL[mode], k = Math.min(SW / F.w, SH / (F.h + F.road));
   $('floor').style.transform = `translate(${(SW - F.w * k) / 2}px,0) scale(${k})`;
   if (G) draw();
 }
