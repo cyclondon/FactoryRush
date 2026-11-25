@@ -97,6 +97,12 @@ header{flex:none;position:relative;z-index:6;background:linear-gradient(90deg,rg
  .rail{align-content:flex-start}
  .wrap{margin:8px 0 0;max-width:none}
 }
+.demoB{font:inherit;color:var(--ink);width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:#2a3a30;border:2px solid var(--g);border-radius:16px;padding:12px 16px;margin:4px 0 6px;cursor:pointer;min-height:64px}
+.demoB:hover{background:#31453a}.demoB:focus-visible{outline:3px solid var(--a);outline-offset:2px}
+.demoB .play{flex:none;width:46px;height:46px;border-radius:50%;background:var(--g);color:#08140d;display:grid;place-items:center}
+.demoB b{display:block;font-size:18px;font-weight:900}.demoB small{display:block;color:var(--dim);font-size:14px}
+#vidOv{z-index:30}.vbox{display:flex;flex-direction:column;align-items:center;gap:12px;max-height:100%}
+.vbox video{max-height:calc(100dvh - 110px);max-width:100%;border-radius:16px;background:#000}
 .lvh{margin:18px 0 8px;font-size:18px}
 .lvls{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:8px}
 .how{margin-top:14px;background:#222c26;border-radius:14px;padding:10px 14px}.how summary{cursor:pointer;font-weight:900;min-height:28px}.how ol{margin:8px 0 0}
@@ -148,10 +154,12 @@ footer{color:var(--dim);font-size:13px;text-align:center;padding:14px 12px 24px}
 
 
 <div class="ov" id="startOv"><div class="panel"><div class="hero"></div><div id="intro"></div>
+  <button class="demoB" id="demoB"><span class="play"><svg viewBox="0 0 20 20" width="22" height="22"><path d="M6 4l10 6-10 6z" fill="currentColor"/></svg></span><span><b data-t="demo"></b><small data-t="demoSub"></small></span></button>
   <h3 class="lvh" data-t="pick"></h3><div class="lvls" id="lvls"></div>
   <p class="fine" data-t="footer"></p><details class="how"><summary data-t="howTo"></summary><div id="howto"></div></details>
   <div class="row"><button class="btn" id="langB2" data-t="lang"></button></div>
 </div></div>
+<div class="ov" id="vidOv" hidden><div class="vbox"><video id="vid" src="demo.mp4" poster="demo-poster.jpg" controls playsinline preload="none"></video><button class="btn go" id="vidX" data-t="vidClose"></button></div></div>
 <div class="ov" id="endOv" hidden><div class="panel">
   <h1 id="endH"></h1><div class="stars" id="stars"></div>
   <div class="big num" id="fScore">0</div><p id="best"></p>
@@ -198,7 +206,7 @@ const FL = {L:{w:1280,h:860,road:100,zones:[[20,20,260,820],[300,20,450,820],[77
 const BELTS = [['cutter','temper'],['cutter','laminate'],['temper','igu'],['igu','casement'],['laminate','folding'],['temper','shower']];
 const PROD = S.filter(s => s.pts);
 const TX = {
- zh: {howTo:'點樣玩？',lvl:'第', goal:'訂單', locked:'未開放', lockedLv:'完成上一關後開放', pick:'選擇關卡', next:'下一關', menu:'選擇關卡', noMore:'已無新訂單', dispatch:'出貨區', pass:'過關<span>LEVEL COMPLETE</span>', fail:'未能過關<span>TRY AGAIN</span>', timeLeft:'剩餘時間', starRule:'★ 過關 · ★★ 最多過期 1 張訂單 · ★★★ 沒有過期訂單，破裂 / 故障最多 1 次', failWhy:'要完成 % 張訂單先過關', freeSub:'隨機訂單 · 計最高分', title:'升威廠房大作戰', sub:'LE-RELAX Factory Rush · 中山廠房', shift:'班次剩餘', rush:'趕貨！', score:'分數', pause:'暫停', resume:'繼續', sOn:'聲音 開', sOff:'聲音 關', lang:'English',
+ zh: {demo:'第一次玩？睇 1 分鐘示範', demoSub:'有字幕，一步步教你點玩', vidClose:'明白，開始玩',howTo:'點樣玩？',lvl:'第', goal:'訂單', locked:'未開放', lockedLv:'完成上一關後開放', pick:'選擇關卡', next:'下一關', menu:'選擇關卡', noMore:'已無新訂單', dispatch:'出貨區', pass:'過關<span>LEVEL COMPLETE</span>', fail:'未能過關<span>TRY AGAIN</span>', timeLeft:'剩餘時間', starRule:'★ 過關 · ★★ 最多過期 1 張訂單 · ★★★ 沒有過期訂單，破裂 / 故障最多 1 次', failWhy:'要完成 % 張訂單先過關', freeSub:'隨機訂單 · 計最高分', title:'升威廠房大作戰', sub:'LE-RELAX Factory Rush · 中山廠房', shift:'班次剩餘', rush:'趕貨！', score:'分數', pause:'暫停', resume:'繼續', sOn:'聲音 開', sOff:'聲音 關', lang:'English',
   wall:'升威 LE-RELAX 中山廠房', wallSub:'鋁門窗 · 浴屏 · 玻璃加工 · 五金配件', wallTag:'1986 年至今', waiting:'等候新訂單', bonus:'獎金',
   go:'按此開機', collect:'請收貨', shatter:'玻璃破裂', broke:'機器故障', fixMe:'按此維修', fixing:'維修中', startBtn:'開始', again:'再玩一次',
   endH:'收工<span>SHIFT COMPLETE</span>', newBest:'新紀錄！之前最高 ', firstBest:'首個紀錄', best:'最高紀錄：', products:'成品', ordDone:'完成訂單', ordMiss:'過期訂單', breaks:'破裂 / 故障',
@@ -208,7 +216,7 @@ const TX = {
    <li>生產完成後機器會<b>亮黃燈</b>，請在限時內按下<b>收貨</b>；逾時玻璃會破裂或機器故障，會扣分並需按下維修。</li>
    <li>原料區 → 玻璃加工 → 裝配線，例如：玻璃切割 → 鋼化爐 → 浴屏。</li>
    <li>完成目標訂單數量即過關；訂單逾時會作廢，作廢過多即未能過關。<b>趕貨</b>關卡機器較快，但收貨時間較短。每張完成嘅訂單會由升威貨車送出。</li></ol>`},
- en: {howTo:'How to play',lvl:'Lv', goal:'Orders', locked:'Not yet open', lockedLv:'Opens after the previous level', dispatch:'Dispatch', pick:'Choose a level', next:'Next level', menu:'Levels', noMore:'No more orders', pass:'Level complete<span>過關</span>', fail:'Level not passed<span>未能過關</span>', timeLeft:'Time left', starRule:'★ pass · ★★ at most 1 missed order · ★★★ no missed orders and at most 1 breakage', failWhy:'Complete % orders to pass', freeSub:'Random orders · high score', title:'LE-RELAX Factory Rush', sub:'升威 · Zhongshan factory', shift:'Shift left', rush:'Rush!', score:'Score', pause:'Pause', resume:'Resume', sOn:'Sound on', sOff:'Sound off', lang:'中文',
+ en: {demo:'First time? Watch the 1-minute demo', demoSub:'Step-by-step with captions', vidClose:'Got it, let me play',howTo:'How to play',lvl:'Lv', goal:'Orders', locked:'Not yet open', lockedLv:'Opens after the previous level', dispatch:'Dispatch', pick:'Choose a level', next:'Next level', menu:'Levels', noMore:'No more orders', pass:'Level complete<span>過關</span>', fail:'Level not passed<span>未能過關</span>', timeLeft:'Time left', starRule:'★ pass · ★★ at most 1 missed order · ★★★ no missed orders and at most 1 breakage', failWhy:'Complete % orders to pass', freeSub:'Random orders · high score', title:'LE-RELAX Factory Rush', sub:'升威 · Zhongshan factory', shift:'Shift left', rush:'Rush!', score:'Score', pause:'Pause', resume:'Resume', sOn:'Sound on', sOff:'Sound off', lang:'中文',
   wall:'LE-RELAX Zhongshan Factory', wallSub:'Aluminium windows & doors · Shower screens · Glass · Hardware', wallTag:'Since 1986', waiting:'Waiting for orders', bonus:'Bonus',
   go:'Tap to start', collect:'Collect', shatter:'Glass broken', broke:'Machine fault', fixMe:'tap to repair', fixing:'Repairing', startBtn:'Start', again:'Play again',
   endH:'Shift complete<span>收工</span>', newBest:'New record! Previous best ', firstBest:'First record set!', best:'Best: ', products:'Products', ordDone:'Orders done', ordMiss:'Orders missed', breaks:'Breakages',
@@ -456,6 +464,8 @@ function start(i) {
   newGame(i); beltVis(); $('startOv').hidden = true; $('endOv').hidden = true; draw(); last = performance.now(); pauseUI();
 }
 $('stage').addEventListener('click', e => { const b = e.target.closest('.m'); if (b) click(b.dataset.id); });
+$('demoB').addEventListener('click', () => { $('vidOv').hidden = false; const v = $('vid'); try { v.currentTime = 0; v.play().catch(() => {}); } catch (e) {} });
+$('vidX').addEventListener('click', () => { const v = $('vid'); v.pause(); $('vidOv').hidden = true; });
 $('lvls').addEventListener('click', e => { const b = e.target.closest('.lv'); if (b && !b.disabled) start(+b.dataset.i); });
 $('againB').addEventListener('click', () => start(G.lv)); $('nextB').addEventListener('click', () => start(G.lv + 1)); $('menuB').addEventListener('click', levels);
 $('pauseB').addEventListener('click', () => { if (!G || G.over || !$('startOv').hidden) return; G.paused = !G.paused; last = performance.now(); pauseUI(); });
